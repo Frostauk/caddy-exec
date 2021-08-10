@@ -208,7 +208,8 @@ func insert_placeholders(a []string) []string {
 	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
 	r *Replacer = NewReplacer()
 	for i := range a {
-		a[i] = r.ReplaceKnown(a[i], "")
+		// a[i] = r.ReplaceKnown(a[i], "")
+		a[i] = "TEST"
 	}
 	
 	return a;
