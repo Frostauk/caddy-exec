@@ -1,4 +1,4 @@
-module github.com/frostauk/caddy-exec
+module github.com/Frostauk/caddy-exec
 
 go 1.14
 
