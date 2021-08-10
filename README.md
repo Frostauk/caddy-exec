@@ -2,6 +2,8 @@
 
 Caddy v2 module for running one-off commands.
 
+Primary change is the support of placeholders, which may or may not work at time of reading.
+
 ## Installation
 
 ```
