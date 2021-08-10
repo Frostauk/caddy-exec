@@ -8,6 +8,7 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
+	"github.com/caddyserver/caddy/v2/replacer"
 )
 
 func init() {
@@ -111,6 +112,13 @@ func (c *Cmd) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 	// everything else are args, if present.
 	c.Args = d.RemainingArgs()
+	
+	// Frostauk - Attempt to replace placeholders using Replacer.ReplaceKnown(input, empty string)
+	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
+	r *Replacer = NewReplacer()
+	for i := range c.Args {
+		c.Args[i] = r.ReplaceKnown(c.Args[i], "")
+	}
 
 	// parse the next block
 	return c.unmarshalBlock(d)
