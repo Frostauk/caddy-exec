@@ -113,12 +113,8 @@ func (c *Cmd) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	// everything else are args, if present.
 	c.Args = d.RemainingArgs()
 	
-	// Frostauk - Attempt to replace placeholders using Replacer.ReplaceKnown(input, empty string)
-	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
-	r *Replacer = NewReplacer()
-	for i := range c.Args {
-		c.Args[i] = r.ReplaceKnown(c.Args[i], "")
-	}
+	// Frostauk
+	insert_placeholders(c.Args)
 
 	// parse the next block
 	return c.unmarshalBlock(d)
@@ -135,11 +131,13 @@ func (c *Cmd) unmarshalBlock(d *caddyfile.Dispenser) error {
 				return d.ArgErr()
 			}
 			c.Args = d.RemainingArgs()
+			insert_placeholders(c.Args)
 		case "args":
 			if len(c.Args) > 0 {
 				return d.Err("args specified twice")
 			}
 			c.Args = d.RemainingArgs()
+			insert_placeholders(c.Args)
 		case "directory":
 			if !d.Args(&c.Directory) {
 				return d.ArgErr()
@@ -203,4 +201,15 @@ func (c *Cmd) unmarshalLog(d *caddyfile.Dispenser) (json.RawMessage, error) {
 		}
 	}
 	return caddyconfig.JSONModuleObject(wo, "output", moduleName, nil), nil
+}
+
+func insert_placeholders(a []string) []string {
+	// Frostauk - Attempt to replace placeholders using Replacer.ReplaceKnown(input, empty string)
+	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
+	r *Replacer = NewReplacer()
+	for i := range a {
+		a[i] = r.ReplaceKnown(a[i], "")
+	}
+	
+	return a;
 }
