@@ -40,15 +40,12 @@ func (m Middleware) Validate() error { return m.Cmd.validate() }
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	// Frostauk
-	caddyfile.w = w
-	caddyfile.r = r
-	caddyfile.next = next
-
 	var resp struct {
 		Status string `json:"status,omitempty"`
 		Error  string `json:"error,omitempty"`
 	}
+
+	m.Cmd.Args = insert_placeholders(r, m.Cmd.Args)
 
 	err := m.run()
 
