@@ -113,7 +113,7 @@ func (c *Cmd) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	c.Args = d.RemainingArgs()
 	
 	// Frostauk
-	c.Args = insert_placeholders(c.Args)
+	c.Args = insert_placeholders(c, c.Args)
 
 	// parse the next block
 	return c.unmarshalBlock(d)
@@ -131,14 +131,14 @@ func (c *Cmd) unmarshalBlock(d *caddyfile.Dispenser) error {
 			}
 			c.Args = d.RemainingArgs()
 			// Frostauk
-			c.Args = insert_placeholders(c.Args)
+			c.Args = insert_placeholders(c, c.Args)
 		case "args":
 			if len(c.Args) > 0 {
 				return d.Err("args specified twice")
 			}
 			c.Args = d.RemainingArgs()
 			// Frostauk
-			c.Args = insert_placeholders(c.Args)
+			c.Args = insert_placeholders(c, c.Args)
 		case "directory":
 			if !d.Args(&c.Directory) {
 				return d.ArgErr()
@@ -227,8 +227,7 @@ func insert_placeholders(c Cmd, a []string) []string {
 	// var c *caddy.Context = caddy.NewContext(caddy.ReplacerCtxKey);
 	// var r *caddy.Replacer = c.(*caddy.Replacer)
 	
-	var context *caddy.Context = c.context;
-	var r *caddy.Replacer = context.Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
+	var r *caddy.Replacer = c.context.Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	for i := range a {
 		return_array[i] = r.ReplaceKnown(a[i], "")
 		// return_array[i] = "TEST"
