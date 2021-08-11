@@ -216,11 +216,21 @@ func insert_placeholders(a []string) []string {
 	
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L28
 	// var r *caddy.Replacer = caddy.Replacer.NewReplacer()
-	var r *caddy.Replacer = caddy.NewReplacer()
+	
+	// Initializes, but doesn't replace due to not having a ReplacerKey
+	// var r *caddy.Replacer = caddy.NewReplacer()
+	
+	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L76
+	// var r *caddy.Replacer = req.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
+	
+	var c *caddy.Context = caddy.NewContext(caddy.ReplacerCtxKey);
+	var r *caddy.Replacer = c.(*caddy.Replacer)
 	for i := range a {
 		return_array[i] = r.ReplaceKnown(a[i], "")
 		// return_array[i] = "TEST"
 	}
+	
+	// TODO: Cancel, according to Context's description: https://pkg.go.dev/github.com/caddyserver/caddy/v2#Context
 	
 	return return_array;
 }
