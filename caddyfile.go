@@ -216,10 +216,10 @@ func insert_placeholders(a []string) []string {
 	
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L28
 	// var r *caddy.Replacer = caddy.Replacer.NewReplacer()
-	// var r *caddy.Replacer = caddy.NewReplacer()
+	var r *caddy.Replacer = caddy.NewReplacer()
 	for i := range a {
-		// a[i] = r.ReplaceKnown(a[i], "")
-		return_array[i] = "TEST"
+		return_array[i] = r.ReplaceKnown(a[i], "")
+		// return_array[i] = "TEST"
 	}
 	
 	return return_array;
