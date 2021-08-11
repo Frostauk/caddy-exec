@@ -58,6 +58,12 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 	}
 
 	w.Header().Add("content-type", "application/json")
+
+	// Frostauk
+	if next != nil {
+		return next.ServeHTTP(w, r)
+	}
+
 	return json.NewEncoder(w).Encode(resp)
 }
 
