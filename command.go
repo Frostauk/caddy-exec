@@ -53,16 +53,10 @@ type Cmd struct {
 	// logging
 	stdWriter io.WriteCloser
 	errWriter io.WriteCloser
-	
-	// Frostauk
-	context caddy.Context
 }
 
 // Provision implements caddy.Provisioner.
 func (c *Cmd) provision(ctx caddy.Context, cm caddy.Module) error {
-	// Frostauk
-	c.context = ctx
-	
 	c.log = ctx.Logger(cm)
 
 	// timeout
@@ -100,9 +94,6 @@ func (c *Cmd) provision(ctx caddy.Context, cm caddy.Module) error {
 }
 
 func writerFromRaw(ctx caddy.Context, c *Cmd, field string, w json.RawMessage) (io.WriteCloser, error) {
-	// Frostauk
-	c.context = ctx
-	
 	var err error
 	var writerOpener caddy.WriterOpener
 	var writer io.WriteCloser
