@@ -45,7 +45,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 		Error  string `json:"error,omitempty"`
 	}
 
-	// m.Cmd.Args = insert_placeholders(r, m.Cmd.Args)
+	m.Cmd.Args = insert_placeholders(r, m.Cmd.Args)
 
 	err := m.run()
 
