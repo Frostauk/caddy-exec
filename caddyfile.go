@@ -111,7 +111,7 @@ func (c *Cmd) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 	// everything else are args, if present.
 	c.Args = d.RemainingArgs()
-	
+
 	// Frostauk
 	c.Args = insert_placeholders(c, c.Args)
 
@@ -207,33 +207,34 @@ func (c *Cmd) unmarshalLog(d *caddyfile.Dispenser) (json.RawMessage, error) {
 func insert_placeholders(c *Cmd, a []string) []string {
 	// Frostauk - Attempt to replace placeholders using Replacer.ReplaceKnown(input, empty string)
 	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
-	
+
 	// Cannot be done due to dynamic array size creation
 	//var return_array = [len(a)]string{}
-	
+
 	// Taken from: https://blog.golang.org/slices-intro
 	var return_array = make([]string, len(a))
-	
+
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L28
 	// var r *caddy.Replacer = caddy.Replacer.NewReplacer()
-	
+
 	// Initializes, but doesn't replace due to not having a ReplacerKey
 	// var r *caddy.Replacer = caddy.NewReplacer()
-	
+
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L76
 	// var r *caddy.Replacer = req.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
-	
+
 	// Won't work due to NewContext requiring an existing Context to create a new one.
 	// var c *caddy.Context = caddy.NewContext(caddy.ReplacerCtxKey);
 	// var r *caddy.Replacer = c.(*caddy.Replacer)
-	
-	var r *caddy.Replacer = c.context.Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
+
+	// Doesn't work due to Cmd with context causing a crash.
+	// var r *caddy.Replacer = c.context.Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	for i := range a {
 		return_array[i] = r.ReplaceKnown(a[i], "")
 		// return_array[i] = "TEST"
 	}
-	
+
 	// TODO: Cancel, according to Context's description: https://pkg.go.dev/github.com/caddyserver/caddy/v2#Context
-	
-	return return_array;
+
+	return return_array
 }
