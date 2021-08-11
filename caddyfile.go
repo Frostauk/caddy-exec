@@ -8,7 +8,7 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/caddyserver/caddy/replacer"
+	// "github.com/caddyserver/caddy/replacer"
 )
 
 func init() {
@@ -210,7 +210,8 @@ func insert_placeholders(a []string) []string {
 	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
 	var return_array = [len(a)]string{}
 	
-	r *Replacer = NewReplacer()
+	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L28
+	r *caddy.Replacer = NewReplacer()
 	for i := range a {
 		// a[i] = r.ReplaceKnown(a[i], "")
 		return_array[i] = "TEST"
