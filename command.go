@@ -55,7 +55,7 @@ type Cmd struct {
 	errWriter io.WriteCloser
 	
 	// Frostauk
-	caddy.Context context
+	context caddy.Context
 }
 
 // Provision implements caddy.Provisioner.
