@@ -217,29 +217,13 @@ func insert_placeholders(request *http.Request, a []string) []string {
 	// Taken from: https://blog.golang.org/slices-intro
 	var return_array = make([]string, len(a))
 
-	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L28
-	// var r *caddy.Replacer = caddy.Replacer.NewReplacer()
-
-	// Initializes, but doesn't replace due to not having a ReplacerKey
-	// var r *caddy.Replacer = caddy.NewReplacer()
-
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L76
-	// var r *caddy.Replacer = req.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
-
-	// Won't work due to NewContext requiring an existing Context to create a new one.
-	// var c *caddy.Context = caddy.NewContext(caddy.ReplacerCtxKey);
-	// var r *caddy.Replacer = c.(*caddy.Replacer)
-
-	// Doesn't work due to Cmd with context causing a crash.
-	// var r *caddy.Replacer = c.context.Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
-
 	var r *caddy.Replacer = request.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	for i := range a {
 		return_array[i] = r.ReplaceKnown(a[i], "")
-		// return_array[i] = "TEST"
 	}
 
-	// TODO: Cancel, according to Context's description: https://pkg.go.dev/github.com/caddyserver/caddy/v2#Context
+	// TODO: Currently, the return will not be split at each placeholder as it should, which makes queries with multiple ?value blocks return as one long string of all queries.
 
 	return return_array
 }
