@@ -204,7 +204,7 @@ func (c *Cmd) unmarshalLog(d *caddyfile.Dispenser) (json.RawMessage, error) {
 	return caddyconfig.JSONModuleObject(wo, "output", moduleName, nil), nil
 }
 
-func insert_placeholders(a []string) []string {
+func insert_placeholders(c Cmd*, a []string) []string {
 	// Frostauk - Attempt to replace placeholders using Replacer.ReplaceKnown(input, empty string)
 	// empty string (taken from ReplaceAll description): "Values that are empty string will be substituted with empty."
 	
@@ -223,8 +223,12 @@ func insert_placeholders(a []string) []string {
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L76
 	// var r *caddy.Replacer = req.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	
-	var c *caddy.Context = caddy.NewContext(caddy.ReplacerCtxKey);
-	var r *caddy.Replacer = c.(*caddy.Replacer)
+	// Won't work due to NewContext requiring an existing Context to create a new one.
+	// var c *caddy.Context = caddy.NewContext(caddy.ReplacerCtxKey);
+	// var r *caddy.Replacer = c.(*caddy.Replacer)
+	
+	var context *caddy.Context = c.context;
+	var r *caddy.Replacer = context.(*caddy.Replacer)
 	for i := range a {
 		return_array[i] = r.ReplaceKnown(a[i], "")
 		// return_array[i] = "TEST"
