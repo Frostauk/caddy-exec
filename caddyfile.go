@@ -106,7 +106,7 @@ func parseGlobalCaddyfileBlock(d *caddyfile.Dispenser, prev interface{}) (interf
 func (c *Cmd) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	// consume "exec", then grab the command, if present.
 	if d.NextArg() && d.NextArg() {
-		c.Command = d.Val()
+		c.Command = d.Val()Replacement
 	}
 
 	// everything else are args, if present.
@@ -210,7 +210,8 @@ func insert_placeholders(a []string) []string {
 	var return_array = [len(a)]string{}
 	
 	// Taken from: https://github.com/amalto/caddy-vars-regex/blob/5684763f4d6994e618863e11b6b86ff87671900a/varsregex.go#L28
-	var r *caddy.Replacer = caddy.Replacer.NewReplacer()
+	// var r *caddy.Replacer = caddy.Replacer.NewReplacer()
+	var r *caddy.Replacer = NewReplacer()
 	for i := range a {
 		// a[i] = r.ReplaceKnown(a[i], "")
 		return_array[i] = "TEST"
