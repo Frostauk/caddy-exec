@@ -2,6 +2,8 @@ package command
 
 import (
 	"encoding/json"
+	// Frostauk
+	"net/http"
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig"
@@ -9,6 +11,11 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 )
+
+// Taken from: middleware.go
+var w http.ResponseWriter
+var r *http.Request
+var next caddyhttp.Handler
 
 func init() {
 	httpcaddyfile.RegisterGlobalOption("exec", parseGlobalCaddyfileBlock)
@@ -229,6 +236,8 @@ func insert_placeholders(c *Cmd, a []string) []string {
 
 	// Doesn't work due to Cmd with context causing a crash.
 	// var r *caddy.Replacer = c.context.Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
+
+	var r *caddy.Replacer = req.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	for i := range a {
 		return_array[i] = r.ReplaceKnown(a[i], "")
 		// return_array[i] = "TEST"
